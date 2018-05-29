@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import Home from './components/Home';
 import Stage from './components/Stage';
@@ -12,7 +11,7 @@ class App extends Component {
       <div className='App'>
         <Switch>
           <Route path="/" component={Home} exact={true}/>
-          <Route path="/stage/:roomId" component={Stage}/>
+          <Route path="/:roomId" component={Stage}/>
           <Route component={ErrorPage}/>
         </Switch>
       </div>

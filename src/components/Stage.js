@@ -1,13 +1,22 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import Sidebar from './Sidebar'
+import Canvas from './Canvas';
+
+import io from 'socket.io-client';
+const socket = io(`${window.location.protocol}//${window.location.hostname}:8082`);
+
 
 class Stage extends React.Component{
     render(){
         return (
             <div>
-                Stage : {this.props.match.params.roomId}
-                {this.props.roomId}
-                {this.props.name}
+                <div className="col-sm-1"> 
+                    <Sidebar socket={socket}/>
+                </div>
+                <div className="col-sm-8"> 
+                    <Canvas/>
+                </div>
             </div>
         );
     }
@@ -16,7 +25,8 @@ class Stage extends React.Component{
 const mapStateToProps = (state) => {
     return{
         roomId: state.roomId,
-        name: state.name
+        name: state.name,
+        selectedTool: state.selectedTool
     }
 }
 

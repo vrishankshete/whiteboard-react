@@ -4,24 +4,10 @@ import {connect} from 'react-redux';
 import * as actionCreator from '../store/actions'
 
 class Home extends React.Component{
-
-    constructor(){
-        super();
-        // this.state = {
-        //     roomId:0,
-        //     name:'ABC'
-        // }
-    }
-
-    // roomIdEntered(roomId){
-    //     this.setState({roomId});
-    // }
-    // nameEntered(name){
-    //     this.setState({name});
-    // }
     enterRoom(){
-        this.props.history.push('/stage/'+this.props.roomId);
+        this.props.history.push('/'+this.props.roomId);
     }
+    
     render(){
         return (
             <div>

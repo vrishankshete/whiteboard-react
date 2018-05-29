@@ -4,7 +4,8 @@ import {BrowserRouter} from 'react-router-dom';
 import {createStore} from 'redux';
 import {Provider} from 'react-redux';
 import rootReducer from './store/reducer'
-import './index.css';
+//import './index.css';
+//import './bootstrap.min.css';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 
