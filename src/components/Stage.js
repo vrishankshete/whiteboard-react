@@ -15,7 +15,7 @@ class Stage extends React.Component{
                     <Sidebar socket={socket}/>
                 </div>
                 <div className="col-sm-8"> 
-                    <Canvas/>
+                    <Canvas socket={socket}/>
                 </div>
             </div>
         );

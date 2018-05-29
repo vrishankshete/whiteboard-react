@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import * as actionCreator from '../store/actions';
 import Shape from './Shapes/Shape';
+import helper from './Shapes/ShapeHelper';
 
 class Canvas extends React.Component{
     constructor(){
@@ -11,33 +11,19 @@ class Canvas extends React.Component{
             drawings:[],
             shape: {
                 type:'',
-                style:{},
-                width:1,
-                height:1
+                attributes:{
+                    style:{}
+                }
             }
         }
     }
 
     getCommonSVGStyle(e){
         let svgStyle = {};
-        //var strokeStyle="", strokeColor="", strokeWidth='strokeWidth:4px;';
-
-        if(e.which === 3){
-            svgStyle.stroke='red';
-            //strokeColor = 'stroke:red;';
-        }
-        else{
-            svgStyle.stroke='white';            
-            //strokeColor = 'stroke:white;';
-        }
-
+        (e.which === 3)?svgStyle.stroke='red':svgStyle.stroke='white';
         switch(this.props.selectedTool){
-            case 'pen':
-                //Default settings
-            break;
             case 'pencil':
                 svgStyle.strokeDasharray='5,5';
-                //strokeStyle = "strokeDasharray:5,5;";
             break;
             case 'eraser':
                 svgStyle.stroke='black';
@@ -46,26 +32,36 @@ class Canvas extends React.Component{
             default:
             break;
         }
-
-        //svgElStyle = 'fill:none;' + strokeColor + strokeWidth + strokeStyle;
         return svgStyle;
     }
 
     svgMouseDown(e){
         this.setState({penDown:true});
         let style = this.getCommonSVGStyle(e);
+        helper[this.props.selectedTool].initialValues.x = e.nativeEvent.offsetX;
+        helper[this.props.selectedTool].initialValues.y = e.nativeEvent.offsetY;
         this.setState({
             shape: {
-                type:'rectangle',
-                style,
-                width:10+this.state.shape.width,
-                height:10+this.state.shape.height
+                type:this.props.selectedTool,
+                attributes:{
+                    style,
+                    ...helper[this.props.selectedTool].initialValues
+                }
             }
         });
     }
     svgMouseMove(e){
         if(this.state.penDown){
-            console.log(e);
+            let attr = helper[this.props.selectedTool].getAttributes(e.nativeEvent.offsetX,e.nativeEvent.offsetY);
+            this.setState({
+                shape: {
+                    type:this.state.shape.type,
+                    attributes:{
+                        style:this.state.shape.attributes.style,
+                        ...attr
+                    }
+                }
+            }); 
         }
     }
     svgMouseUp(e){
@@ -81,7 +77,7 @@ class Canvas extends React.Component{
                     onMouseLeave={(e)=>this.svgMouseUp(e)}>
                     <Shape shape={this.state.shape}/>
                     {/* {
-                        this.state.allSVGElements.map()
+                        this.state.allSVElements.map()
                     } */}
                     {/* <circle style={{cx:40,cy:50, r:40, stroke:"green", strokeWidth:4, fill:"blue"}} />
                     <circle cx="100" cy="50" r="40" stroke="green" strokeWidth="4" fill="yellow" />

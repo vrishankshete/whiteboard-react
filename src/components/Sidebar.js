@@ -2,13 +2,11 @@ import React from 'react';
 import {connect} from 'react-redux';
 import * as actionCreator from '../store/actions';
 import {Nav, NavItem} from 'react-bootstrap';
-import io from 'socket.io-client';
 
 class Sidebar extends React.Component{
     changeTool(e){
         if(e==='clearAll'){
             this.props.socket.emit("clearAll");
-            //socket.emit('clearAll');
         }
         else{
             this.props.toolChanged(e)
