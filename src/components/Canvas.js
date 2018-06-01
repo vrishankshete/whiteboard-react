@@ -2,20 +2,43 @@ import React from 'react';
 import {connect} from 'react-redux';
 import Shape from './Shapes/Shape';
 import helper from './Shapes/ShapeHelper';
+import {Map} from 'immutable';
 
 class Canvas extends React.Component{
-    constructor(){
-        super();
-        this.state = {
-            penDown:false,
-            drawings:[],
-            shape: {
-                type:'',
-                attributes:{
-                    style:{}
-                }
+    constructor(props){
+        super(props);
+        this.penDown = false;
+        this.shape = {
+            type:'',
+            attributes:{
+                style:{}
             }
+        };
+        this.state = {
+            drawings:[],
+            cursors:{},
+            // shape: {
+            //     type:'',
+            //     attributes:{
+            //         style:{}
+            //     }
+            // }
+            shape: this.shape
         }
+        this.bindSocketEvents();
+    }
+
+    bindSocketEvents(){
+        this.props.socket.on('cursorStart', function(msg){
+            this.setState({cursors:{...this.state.cursors, [msg.name]:msg.drawingData}});
+        });
+        this.props.socket.on('updateCursor', function(msg){
+            this.setState({cursors:{...this.state.cursors, [msg.name]:msg.drawingData}});
+            
+        });
+        this.props.socket.on('addDrawing', function(msg){
+            this.setState({drawings:[...this.state.cursors, this.state.cursors[msg.name]]});            
+        });
     }
 
     getCommonSVGStyle(e){
@@ -32,42 +55,64 @@ class Canvas extends React.Component{
             default:
             break;
         }
+        svgStyle.fill='none';
         return svgStyle;
     }
 
     svgMouseDown(e){
-        this.setState({penDown:true});
+        this.penDown = true;
         let style = this.getCommonSVGStyle(e);
-        helper[this.props.selectedTool].initialValues.x = e.nativeEvent.offsetX;
-        helper[this.props.selectedTool].initialValues.y = e.nativeEvent.offsetY;
-        this.setState({
-            shape: {
-                type:this.props.selectedTool,
-                attributes:{
-                    style,
-                    ...helper[this.props.selectedTool].initialValues
-                }
+        helper[this.props.selectedTool].penDown({x:e.nativeEvent.offsetX,y:e.nativeEvent.offsetY});
+        //helper[this.props.selectedTool].initialValues.x = e.nativeEvent.offsetX;
+        //helper[this.props.selectedTool].initialValues.y = e.nativeEvent.offsetY;]
+        this.shape = {
+            type:this.props.selectedTool,
+            attributes:{
+                style,
+                ...helper[this.props.selectedTool].initialValues
             }
-        });
+        };
+        this.props.socket.emit('cursorStart', this.shape);
+        this.setState({shape:this.shape});
     }
     svgMouseMove(e){
-        if(this.state.penDown){
+        if(this.penDown){
             let attr = helper[this.props.selectedTool].getAttributes(e.nativeEvent.offsetX,e.nativeEvent.offsetY);
-            this.setState({
-                shape: {
-                    type:this.state.shape.type,
-                    attributes:{
-                        style:this.state.shape.attributes.style,
-                        ...attr
-                    }
+            this.shape = {
+                type:this.shape.type,
+                attributes:{
+                    style:this.shape.attributes.style,
+                    ...attr
                 }
-            }); 
+            };
+            this.setState({shape: this.shape});
+            this.props.socket.emit('updateCursor', this.shape);
         }
     }
     svgMouseUp(e){
-        this.setState({penDown:false});        
+        if(this.penDown){
+            this.penDown = false;
+            if(helper[this.props.selectedTool].penUp){
+                let attr = helper[this.props.selectedTool].penUp();
+                this.shape = {
+                    type:this.shape.type,
+                    attributes:{
+                        style:this.shape.attributes.style,
+                        ...attr
+                    }
+                };
+                // this.setState({shape: this.shape});
+                // this.setState({drawings: [...this.state.drawings, this.shape]});
+                //this.setState({shape: this.shape});
+            }
+            this.props.socket.emit('addDrawing', this.shape);
+            this.setState({drawings: [...this.state.drawings, this.shape]});
+            //this.setState({shape: this.shape});
+        }
     }
     render(){
+        //console.log(this.props.socket, "VRI");
+        this.bindSocketEvents();
         return (
             <div> 
                 <svg style={{border: '1px solid black',height:'500px',width:'100%',backgroundColor: 'black'}} 
@@ -75,13 +120,11 @@ class Canvas extends React.Component{
                     onMouseMove={(e)=>this.svgMouseMove(e)}
                     onMouseUp={(e)=>this.svgMouseUp(e)}
                     onMouseLeave={(e)=>this.svgMouseUp(e)}>
+                    {
+                        this.state.drawings.map((drawing)=><Shape shape={drawing}/>)
+                    }
                     <Shape shape={this.state.shape}/>
-                    {/* {
-                        this.state.allSVElements.map()
-                    } */}
-                    {/* <circle style={{cx:40,cy:50, r:40, stroke:"green", strokeWidth:4, fill:"blue"}} />
-                    <circle cx="100" cy="50" r="40" stroke="green" strokeWidth="4" fill="yellow" />
-                    <circle cx="150" cy="50" r="40" stroke="green" strokeWidth="4" fill="yellow" /> */}
+
                 </svg>
             </div>
         );

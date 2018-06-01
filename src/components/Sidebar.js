@@ -17,9 +17,10 @@ class Sidebar extends React.Component{
             <Nav bsStyle="pills" stacked activeKey={this.props.selectedTool} onSelect={(e)=>this.changeTool(e)}>
                 <NavItem eventKey='pen'> Pen </NavItem>
                 <NavItem eventKey='pencil'> Pencil </NavItem>
-                <NavItem eventKey='eraser'> Eraser </NavItem>
+                <NavItem eventKey='line'> Line </NavItem>
                 <NavItem eventKey='rectangle'> Rectangle </NavItem>
                 <NavItem eventKey='ellipse'> Ellipse </NavItem>
+                <NavItem eventKey='eraser'> Eraser </NavItem>                
                 <NavItem eventKey='clearAll'> Clear All </NavItem>
             </Nav>
         );

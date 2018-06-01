@@ -1,11 +1,55 @@
+import simplify from 'simplify-js';
+
 let helper = {
+	'pen': {
+        initialValues:{
+            points:[]
+		},
+		penDown: function(startPoint){
+			this.initialValues.points.push(startPoint);
+		},
+		penUp: function(startPoint){
+			this.initialValues.points = simplify(this.initialValues.points, 10, true);
+			let svgPath = this.getSVGPath(this.initialValues.points);
+			this.initialValues.points=[];
+			return {d:svgPath};
+		},
+        getAttributes: function(cx, cy){
+			//let {x,y} = this.initialValues;
+			this.initialValues.points.push({x:cx,y:cy});
+			let svgPath = this.getSVGPath(this.initialValues.points);
+			return {d:svgPath};
+		},
+		getSVGPath: function(rawPoints){
+			let svgPath = 'M '+rawPoints[0].x+' '+rawPoints[0].y;
+			let len = rawPoints.length;
+			for(let i=1; i<len; i++){
+				svgPath = svgPath + ' L' + rawPoints[i].x + ' ' + rawPoints[i].y;
+			}
+			return svgPath;
+		}
+    },
+	'line': {
+        initialValues:{
+            x:0,y:0,x2:0,y2:0
+		},
+		penDown: function(startPoint){
+			this.initialValues.x = startPoint.x;
+			this.initialValues.y = startPoint.y;
+		},
+        getAttributes: function(cx, cy){
+			let {x:x1,y:y1} = this.initialValues;
+			return {x1, y1, x2:cx, y2:cy};
+        }
+    },
     'rectangle': {
         initialValues:{
-            width:1,
-            height:1,
-            x:0,
-            y:0
-        },
+            width:1,height:1,x:0,y:0
+		},
+		penDown: function(startPoint){
+			this.initialValues.x = startPoint.x;
+			this.initialValues.y = startPoint.y;
+		},
         getAttributes: function(cx, cy){
             let {x,y} = this.initialValues;
             if(x < cx && y < cy){
@@ -27,11 +71,12 @@ let helper = {
     },
     'ellipse':{
         initialValues:{
-            rx:1,
-            ry:1,
-            cx:0,
-            cy:0
-        },
+            rx:1,ry:1,cx:0,cy:0,x:0,y:0
+		},
+		penDown: function(startPoint){
+			this.initialValues.x = startPoint.x;
+			this.initialValues.y = startPoint.y;
+		},
         getEllipseCenter: function(start, end){
 			return {
 				cx: (start.x+end.x)/2,
@@ -69,5 +114,8 @@ let helper = {
         }
     }
 }
+
+helper['pencil'] = helper['pen'];
+helper['eraser'] = helper['pen'];
 
 export default helper;

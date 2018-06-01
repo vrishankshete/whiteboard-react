@@ -9,6 +9,7 @@ const socket = io(`${window.location.protocol}//${window.location.hostname}:8082
 
 class Stage extends React.Component{
     render(){
+        console.log(socket);
         return (
             <div>
                 <div className="col-sm-1"> 
