@@ -6,27 +6,17 @@ let helper = {
             points:[]
 		},
 		penDown: function(startPoint){
+			this.initialValues.points=[];			
 			this.initialValues.points.push(startPoint);
 		},
 		penUp: function(startPoint){
 			this.initialValues.points = simplify(this.initialValues.points, 10, true);
-			let svgPath = this.getSVGPath(this.initialValues.points);
-			this.initialValues.points=[];
-			return {d:svgPath};
+			return {points:this.initialValues.points};
 		},
         getAttributes: function(cx, cy){
-			//let {x,y} = this.initialValues;
 			this.initialValues.points.push({x:cx,y:cy});
-			let svgPath = this.getSVGPath(this.initialValues.points);
-			return {d:svgPath};
-		},
-		getSVGPath: function(rawPoints){
-			let svgPath = 'M '+rawPoints[0].x+' '+rawPoints[0].y;
-			let len = rawPoints.length;
-			for(let i=1; i<len; i++){
-				svgPath = svgPath + ' L' + rawPoints[i].x + ' ' + rawPoints[i].y;
-			}
-			return svgPath;
+			return {points:this.initialValues.points};
+			
 		}
     },
 	'line': {

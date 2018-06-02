@@ -1,7 +1,7 @@
 import React from 'react';
 import {FormControl} from 'react-bootstrap';
 import {connect} from 'react-redux';
-import * as actionCreator from '../store/actions'
+import * as actionCreator from '../store/actions';
 
 class Home extends React.Component{
     enterRoom(){

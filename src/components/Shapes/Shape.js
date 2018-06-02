@@ -9,18 +9,18 @@ export default class Shape extends React.Component{
     renderShape(){
         switch(this.props.shape.type) {
             case 'rectangle': 
-            return <Rectangle attributes={this.props.shape.attributes}/>
+            return <Rectangle showToolTip={this.props.showToolTip} name={this.props.name} attributes={this.props.shape.attributes}/>
 
             case 'ellipse': 
-            return <Ellipse attributes={this.props.shape.attributes}/>
+            return <Ellipse showToolTip={this.props.showToolTip} name={this.props.name} attributes={this.props.shape.attributes}/>
 
             case 'line': 
-            return <Line attributes={this.props.shape.attributes}/>
+            return <Line showToolTip={this.props.showToolTip} name={this.props.name} attributes={this.props.shape.attributes}/>
 
             case 'pen':
             case 'pencil':
             case 'eraser':
-            return <Path attributes={this.props.shape.attributes}/>
+            return <Path showToolTip={this.props.showToolTip} name={this.props.name} attributes={this.props.shape.attributes}/>
 
             default:
                 return null;

@@ -1,8 +1,8 @@
 import actionTypes from './actions'
 
 const initialState = {
-    name:"ABC",
-    roomId:0,
+    name:"anonymous",
+    roomId:-1,
     selectedTool:'pen',
     clearAll:false
 }
