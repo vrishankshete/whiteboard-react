@@ -15,7 +15,7 @@ export default class Shape extends React.Component{
             return <Ellipse showToolTip={this.props.showToolTip} name={this.props.name} attributes={this.props.shape.attributes}/>
 
             case 'line': 
-            return <Line showToolTip={this.props.showToolTip} name={this.props.name} attributes={this.props.shape.attributes}/>
+            return <Line removeDrawing={this.props.removeDrawing} drawingId={this.props.drawingId} showOverlay={this.props.showOverlay} showToolTip={this.props.showToolTip} name={this.props.name} attributes={this.props.shape.attributes}/>
 
             case 'pen':
             case 'pencil':

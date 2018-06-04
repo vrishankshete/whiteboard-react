@@ -50,15 +50,23 @@ class Canvas extends React.Component{
             this.setState({cursors:this.cursors});
         });
         this.props.socket.on('addDrawing', (msg)=>{
-            if(this.cursors[msg.name]){
-                this.drawings = [...this.drawings, msg.drawingData];
+            //if(this.cursors[msg.name]){
+                this.drawings = [...this.drawings, msg];
+                console.log("DRAWINGS:::: ",this.drawings);
                 this.setState({drawings:this.drawings});
-            }
+            //}
             delete this.cursors[msg.name];
-            this.setState({cursors:this.cursors});  
+            this.setState({cursors:this.cursors});
+        });
+        this.props.socket.on('removeDrawing', (msg)=>{
+            // this.drawings = [...this.drawings, msg.drawingData];
+            // this.setState({drawings:this.drawings});
+            // delete this.cursors[msg.name];
+            // this.setState({cursors:this.cursors});  
         });
         this.props.socket.on('initDrawings',(msg)=>{
-            this.drawings = msg.map(drawing=>drawing.drawingData);
+            //this.drawings = msg.map(drawing=>drawing.drawingData);
+            this.drawings = msg;
             this.setState({drawings:this.drawings});
             
         });
@@ -67,6 +75,11 @@ class Canvas extends React.Component{
             this.setState({drawings:this.drawings});
             
         });
+    }
+
+    removeDrawing(drawingId){
+        this.drawings = this.drawings.filter(drawing=>drawing.drawingId != drawingId);
+        this.setState({drawings:this.drawings});        
     }
 
     getCommonSVGStyle(e){
@@ -128,10 +141,9 @@ class Canvas extends React.Component{
                     }
                 };
             }
-
             this.props.socket.emit('addDrawing', this.shape);
-            this.drawings = [...this.drawings, this.shape];
-            this.setState({drawings: this.drawings});
+            // this.drawings = [...this.drawings, this.shape];
+            // this.setState({drawings: this.drawings});
             this.shape = {
                 type:'',
                 attributes:{
@@ -161,7 +173,7 @@ class Canvas extends React.Component{
                     onTouchMove={(e)=>this.svgMouseMove(e)}
                     onTouchEnd={(e)=>this.svgMouseUp(e)}>
                     {
-                        this.state.drawings.map((drawing)=><Shape shape={drawing}/>)
+                        this.state.drawings.map((drawing)=>{console.log("HERRE",drawing); return <Shape removeDrawing={this.removeDrawing.bind(this)} drawingId={drawing.drawingId} showOverlay={true} shape={drawing.drawingData}/>})
                     }
                     {
                         this.renderCursors()
