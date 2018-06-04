@@ -10,7 +10,7 @@ let helper = {
 			this.initialValues.points.push(startPoint);
 		},
 		penUp: function(startPoint){
-			this.initialValues.points = simplify(this.initialValues.points, 10, true);
+			this.initialValues.points = simplify(this.initialValues.points, 1, true);
 			return {points:this.initialValues.points};
 		},
         getAttributes: function(cx, cy){
