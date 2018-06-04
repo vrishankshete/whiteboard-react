@@ -2,7 +2,6 @@ import React from 'react';
 import {connect} from 'react-redux';
 import Shape from './Shapes/Shape';
 import helper from './Shapes/ShapeHelper';
-//import {Map} from 'immutable';
 
 class Canvas extends React.Component{
     constructor(props){
@@ -14,14 +13,9 @@ class Canvas extends React.Component{
                 style:{}
             }
         };
-        this.toolTip = {
-            show:false,
-            style:{stroke:'red'}
-        };
         this.cursors = {};
         this.drawings = [];
         this.state = {
-            toolTip:this.toolTip,
             drawings:[],
             cursors:{},
             shape: this.shape
@@ -50,22 +44,16 @@ class Canvas extends React.Component{
             this.setState({cursors:this.cursors});
         });
         this.props.socket.on('addDrawing', (msg)=>{
-            //if(this.cursors[msg.name]){
-                this.drawings = [...this.drawings, msg];
-                console.log("DRAWINGS:::: ",this.drawings);
-                this.setState({drawings:this.drawings});
-            //}
+            this.drawings = [...this.drawings, msg];
+            this.setState({drawings:this.drawings});
             delete this.cursors[msg.name];
             this.setState({cursors:this.cursors});
         });
-        this.props.socket.on('removeDrawing', (msg)=>{
-            // this.drawings = [...this.drawings, msg.drawingData];
-            // this.setState({drawings:this.drawings});
-            // delete this.cursors[msg.name];
-            // this.setState({cursors:this.cursors});  
+        this.props.socket.on('removeDrawing', (drawingId)=>{
+            this.drawings = this.drawings.filter(drawing=>drawing.drawingId !== drawingId);
+            this.setState({drawings:this.drawings});     
         });
         this.props.socket.on('initDrawings',(msg)=>{
-            //this.drawings = msg.map(drawing=>drawing.drawingData);
             this.drawings = msg;
             this.setState({drawings:this.drawings});
             
@@ -78,8 +66,7 @@ class Canvas extends React.Component{
     }
 
     removeDrawing(drawingId){
-        this.drawings = this.drawings.filter(drawing=>drawing.drawingId != drawingId);
-        this.setState({drawings:this.drawings});        
+        this.props.socket.emit("removeDrawing", drawingId);   
     }
 
     getCommonSVGStyle(e){
@@ -101,9 +88,13 @@ class Canvas extends React.Component{
     }
 
     svgMouseDown(e){
+        if(this.props.selectedTool === 'remove') return;
         this.penDown = true;
         let style = this.getCommonSVGStyle(e);
         helper[this.props.selectedTool].penDown({x:e.nativeEvent.offsetX,y:e.nativeEvent.offsetY});
+        //ToDo : Enable touch events for mobile devices
+        //let rect = e.target.getBoundingClientRect();        
+        //helper[this.props.selectedTool].penDown({x:e.nativeEvent.touches[0].pageX-rect.left,y:e.nativeEvent.touches[0].pageY-rect.top});
         this.shape = {
             type:this.props.selectedTool,
             attributes:{
@@ -142,8 +133,6 @@ class Canvas extends React.Component{
                 };
             }
             this.props.socket.emit('addDrawing', this.shape);
-            // this.drawings = [...this.drawings, this.shape];
-            // this.setState({drawings: this.drawings});
             this.shape = {
                 type:'',
                 attributes:{
@@ -157,7 +146,7 @@ class Canvas extends React.Component{
         let constArr = [];
         let cursors = this.state.cursors;
         for (const cursor in cursors) {
-            constArr.push(<Shape showToolTip={true} name={cursor} shape={cursors[cursor]}/>);
+            constArr.push(<Shape key={cursor} showToolTip={true} name={cursor} shape={cursors[cursor]}/>);
         }
         return constArr;
     }
@@ -173,7 +162,12 @@ class Canvas extends React.Component{
                     onTouchMove={(e)=>this.svgMouseMove(e)}
                     onTouchEnd={(e)=>this.svgMouseUp(e)}>
                     {
-                        this.state.drawings.map((drawing)=>{console.log("HERRE",drawing); return <Shape removeDrawing={this.removeDrawing.bind(this)} drawingId={drawing.drawingId} showOverlay={true} shape={drawing.drawingData}/>})
+                        this.state.drawings.map(drawing=><Shape key={drawing.drawingId}
+                                removeDrawing={this.removeDrawing.bind(this)} 
+                                drawingId={drawing.drawingId} 
+                                showOverlay={this.props.selectedTool==='remove'?true:false}
+                                shape={drawing.drawingData}
+                            />)
                     }
                     {
                         this.renderCursors()
@@ -194,9 +188,4 @@ const mapStateToProos = (state) => {
     }
 }
 const mapDispatchToProps = null;
-// (dispatch) => {
-//     return {
-//         toolChanged:(selectedTool)=>dispatch(actionCreator.toolChanged(selectedTool))
-//     }
-// }
 export default connect(mapStateToProos, mapDispatchToProps)(Canvas);

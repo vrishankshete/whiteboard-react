@@ -1,19 +1,55 @@
 import React from 'react';
-import {FormControl} from 'react-bootstrap';
 import {connect} from 'react-redux';
 import * as actionCreator from '../store/actions';
 
 class Home extends React.Component{
+
+    constructor(props){
+        super(props);
+        this.name='';
+        this.roomId='';
+        this.state={
+            errorMessage:''
+        }
+    }
+    nameEntered(name){
+        this.name=name;
+    }
+    roomIdEntered(roomId){
+        this.roomId=roomId;  
+    }
     enterRoom(){
-        this.props.history.push('/'+this.props.roomId);
+        if(this.name === ''){
+            this.setState({errorMessage:'Enter Name and 4 digit room id'});
+            return;
+        }
+        if(isNaN(Number(this.roomId)) || this.roomId.length !== 4){
+            this.setState({errorMessage:'Enter Name and 4 digit room id'});
+            return;
+        }
+        this.props.nameEntered(this.name);
+        this.props.roomIdEntered(this.roomId);
+        this.props.history.push('/'+this.roomId);
     }
     
     render(){
         return (
-            <div>
-                <span> Your Name:  </span><FormControl className="input-name" onBlur={(event)=>{this.props.nameEntered(event.target.value)}}/>
-                <FormControl bsSize="lg" className="input-roomid" onBlur={(event)=>{this.props.roomIdEntered(event.target.value)}}/>
-                <button onClick={()=>{this.enterRoom()}}>Enter Room</button>
+            <div className="myStage">
+                <br/><br/>
+                <div className="form-group">
+                    <div className="col-xs-4">
+                        <label htmlFor="ex2">*Name:</label>
+                        <input className="form-control" id="ex2" type="text" onBlur={(event)=>{this.nameEntered(event.target.value)}}/>
+                    </div>
+                    <div className="col-xs-4">
+                        <label htmlFor="ex3">*Room Id:</label>
+                        <input className="form-control" id="ex3" type="text" onBlur={(event)=>{this.roomIdEntered(event.target.value)}}/>
+                    </div>
+                </div>
+                <br/><br/><br/>
+                <button className="btn-primary" onClick={()=>{this.enterRoom()}}>Join Room</button>
+                <div className="errorMessage">{this.state.errorMessage}</div>
+                <div>A new room will be created if it does not exist</div>
             </div>
         );
     }

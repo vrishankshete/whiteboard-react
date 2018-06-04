@@ -4,18 +4,19 @@ import Sidebar from './Sidebar'
 import Canvas from './Canvas';
 import * as actionCreator from '../store/actions';
 import io from 'socket.io-client';
-const socket = io(`${window.location.protocol}//${window.location.hostname}:8082`);
-
-
+let socket;
 class Stage extends React.Component{
-
-    componentDidMount(){
-        socket.on('connect', () => {
-            if(this.props.roomId === -1){
-                this.props.roomIdEntered(this.props.match.params.roomId);
-                this.props.nameEntered(socket.id);
-            }
-        });
+    componentWillMount(){
+        socket = io(`${window.location.protocol}//${window.location.hostname}:8082`);        
+        if(this.props.roomId === -1){
+            this.props.history.push("/");
+        }
+        // socket.on('connect', () => {
+        //     if(this.props.roomId === -1){
+        //         // this.props.roomIdEntered(this.props.match.params.roomId);
+        //         // this.props.nameEntered(socket.id);
+        //     }
+        // });
     }
 
     componentWillUnmount(){

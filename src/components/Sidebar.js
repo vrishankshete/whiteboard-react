@@ -20,7 +20,8 @@ class Sidebar extends React.Component{
                 <NavItem eventKey='line'> Line </NavItem>
                 <NavItem eventKey='rectangle'> Rectangle </NavItem>
                 <NavItem eventKey='ellipse'> Ellipse </NavItem>
-                <NavItem eventKey='eraser'> Eraser </NavItem>                
+                <NavItem eventKey='remove'> Remove&#10;Drawing </NavItem>
+                {/* <NavItem eventKey='eraser'> Eraser </NavItem>                 */}
                 <NavItem eventKey='clearAll'> Clear All </NavItem>
             </Nav>
         );

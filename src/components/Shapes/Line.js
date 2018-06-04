@@ -14,9 +14,10 @@ export default class Line extends React.Component{
     mouseOut(){
         this.setState({mouseOverMe:false});
     }
+
     renderShape(){
         let {style, x1, y1, x2, y2} = this.props.attributes;            
-        let {showToolTip, name, showOverlay} = this.props;
+        let {showToolTip, name, showOverlay, drawingId} = this.props;
         if(showToolTip){
             return (
                 <g> 
@@ -26,12 +27,15 @@ export default class Line extends React.Component{
             );
         }                         
         if(showOverlay){
-            let styleOverlay = {...style, strokeWidth:'15px', opacity:0.5};
+            let styleOverlay = {...style, strokeWidth:'15px', strokeLinecap:'round', opacity:0.5};
             return (
                 <g> 
-                    { this.state.mouseOverMe?<line style={styleOverlay} x1={x1} y1={y1} x2={x2} y2={y2}/>:''}                    
-                    <line style={style} x1={x1} y1={y1} x2={x2} y2={y2}/>   
-                    <line onClick={()=>{return this.props.removeDrawing(this.props.drawingId);}} onMouseOver={this.mouseEntered.bind(this)} onMouseOut={this.mouseOut.bind(this)} style={{...styleOverlay, strokeWidth:'15px', opacity:0}} x1={x1} y1={y1} x2={x2} y2={y2}/>   
+                    {this.state.mouseOverMe?<line style={styleOverlay} x1={x1} y1={y1} x2={x2} y2={y2}/>:''}
+                    <line style={style} x1={x1} y1={y1} x2={x2} y2={y2}/>
+                    <line onMouseDown={e=>e.stopPropagation()}
+                        onMouseUp={(e)=>{e.stopPropagation(); return this.props.removeDrawing(drawingId);}}
+                        onMouseOver={this.mouseEntered.bind(this)} onMouseOut={this.mouseOut.bind(this)}
+                        style={{...styleOverlay, opacity:0}} x1={x1} y1={y1} x2={x2} y2={y2}/>
                 </g>
             );
         }

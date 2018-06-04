@@ -160,10 +160,8 @@ io.on('connection', function(socket){
 		if(!roomId || rooms[roomId]==undefined){
 			return;
 		}
-		if(drawingId >= rooms[roomId].drawings.length){
-			return;
-		}
-		rooms[roomId].drawings = rooms[roomId].drawings.splice(drawingId, 1);
+		
+		rooms[roomId].drawings = rooms[roomId].drawings.filter(drawing=>drawing.drawingId != drawingId);
 		//socket.broadcast.to(users[id].roomId).emit('addDrawing', drawing);
 		io.to(users[id].roomId).emit('removeDrawing', drawingId);
 	});

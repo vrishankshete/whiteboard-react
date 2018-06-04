@@ -9,18 +9,38 @@ export default class Shape extends React.Component{
     renderShape(){
         switch(this.props.shape.type) {
             case 'rectangle': 
-            return <Rectangle showToolTip={this.props.showToolTip} name={this.props.name} attributes={this.props.shape.attributes}/>
+            return <Rectangle removeDrawing={this.props.removeDrawing} 
+                        drawingId={this.props.drawingId} 
+                        showOverlay={this.props.showOverlay} 
+                        showToolTip={this.props.showToolTip} 
+                        name={this.props.name} 
+                        attributes={this.props.shape.attributes}/>
 
             case 'ellipse': 
-            return <Ellipse showToolTip={this.props.showToolTip} name={this.props.name} attributes={this.props.shape.attributes}/>
+            return <Ellipse removeDrawing={this.props.removeDrawing} 
+                        drawingId={this.props.drawingId} 
+                        showOverlay={this.props.showOverlay} 
+                        showToolTip={this.props.showToolTip} 
+                        name={this.props.name} 
+                        attributes={this.props.shape.attributes}/>
 
             case 'line': 
-            return <Line removeDrawing={this.props.removeDrawing} drawingId={this.props.drawingId} showOverlay={this.props.showOverlay} showToolTip={this.props.showToolTip} name={this.props.name} attributes={this.props.shape.attributes}/>
+            return <Line removeDrawing={this.props.removeDrawing} 
+                        drawingId={this.props.drawingId} 
+                        showOverlay={this.props.showOverlay} 
+                        showToolTip={this.props.showToolTip} 
+                        name={this.props.name} 
+                        attributes={this.props.shape.attributes}/>
 
             case 'pen':
             case 'pencil':
             case 'eraser':
-            return <Path showToolTip={this.props.showToolTip} name={this.props.name} attributes={this.props.shape.attributes}/>
+            return <Path removeDrawing={this.props.removeDrawing} 
+                        drawingId={this.props.drawingId} 
+                        showOverlay={this.props.showOverlay} 
+                        showToolTip={this.props.showToolTip} 
+                        name={this.props.name} 
+                        attributes={this.props.shape.attributes}/>
 
             default:
                 return null;
