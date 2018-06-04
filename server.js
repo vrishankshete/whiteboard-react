@@ -131,11 +131,19 @@ io.on('connection', function(socket){
 
 	socket.on('addDrawing', function(msg){
 		var roomId = users[id].roomId;
+		let drawingId = 0;
 		if(!roomId || rooms[roomId]==undefined){
 			return;
 		}
+		if(rooms[roomId].drawings.length===0){
+			drawingId = 0;
+		}
+		else{
+			drawingId = rooms[roomId].drawings[rooms[roomId].drawings.length-1].drawingId + 1;
+		}
 		var drawing = {
 			userId: id,
+			drawingId: drawingId,
 			name: users[id].name ? users[id].name : id, 
 			addedTime: moment().format(),
 			lastUpdatedUserId: id,
@@ -143,7 +151,21 @@ io.on('connection', function(socket){
 			drawingData: msg
 		};
 		rooms[roomId].drawings.push(drawing);
-		socket.broadcast.to(users[id].roomId).emit('addDrawing', drawing);
+		//socket.broadcast.to(users[id].roomId).emit('addDrawing', drawing);
+		io.to(users[id].roomId).emit('addDrawing', drawing);
+	});
+
+	socket.on('removeDrawing', function(drawingId){
+		var roomId = users[id].roomId;
+		if(!roomId || rooms[roomId]==undefined){
+			return;
+		}
+		if(drawingId >= rooms[roomId].drawings.length){
+			return;
+		}
+		rooms[roomId].drawings = rooms[roomId].drawings.splice(drawingId, 1);
+		//socket.broadcast.to(users[id].roomId).emit('addDrawing', drawing);
+		io.to(users[id].roomId).emit('removeDrawing', drawingId);
 	});
 
 	socket.on('clearAll', function(){
