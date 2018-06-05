@@ -71,6 +71,7 @@ class Canvas extends React.Component{
 
     getCommonSVGStyle(e){
         let svgStyle = {};
+        svgStyle.strokeWidth='2px';
         (e.which === 3)?svgStyle.stroke='red':svgStyle.stroke='white';
         switch(this.props.selectedTool){
             case 'pencil':
