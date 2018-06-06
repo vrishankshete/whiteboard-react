@@ -2,10 +2,7 @@
   "name": "whiteboard-react",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {
-    "express": "^4.14.0",
-    "log4js": "^0.6.38",
-    "moment": "^2.14.1",
+  "devDependencies": {
     "react": "^16.4.0",
     "react-bootstrap": "^0.32.1",
     "react-dom": "^16.4.0",
@@ -14,13 +11,17 @@
     "react-scripts": "1.1.4",
     "redux": "^4.0.0",
     "simplify-js": "^1.2.3",
+    "socket.io-client": "^2.1.1"
+  },
+  "dependencies": {
+    "express": "^4.14.0",
+    "log4js": "^0.6.38",
+    "moment": "^2.14.1",
     "socket.io": "^2.1.1",
-    "socket.io-client": "^2.1.1",
-    "underscore": "^1.8.3",
     "util": "^0.10.3"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "node server.js",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"

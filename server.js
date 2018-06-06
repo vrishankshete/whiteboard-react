@@ -4,7 +4,6 @@ var app = express();
 var http = require('http').Server(app);
 const path = require('path');
 var io = require('socket.io')(http);
-var _ = require("underscore");
 var util = require('util');
 var moment = require('moment');
 var fs = require('fs');
@@ -17,7 +16,6 @@ if (!fs.existsSync(dir)){
 log4js.configure({
  appenders: [
    { type: 'console' },
-   //{ type: 'file', filename: 'logs/chat.log', category: 'chat' },
    {
 		"type": "dateFile",
 		"filename": "logs/chat.log",
@@ -30,8 +28,8 @@ log4js.configure({
 var logger = log4js.getLogger('chat');
 logger.setLevel('auto');
 
-const HOST = '0.0.0.0'
-const PORT = 8082;
+const HOST = 'localhost';
+const PORT = 3000;
 
 var rooms = {};
 var users = {};
@@ -183,5 +181,5 @@ io.on('connection', function(socket){
 });
 
 http.listen(PORT, function(){
-	logger.info(`URL: http://${HOST}:${PORT}/home/`);
+	logger.info(`URL: http://${HOST}:${PORT}/`);
 });

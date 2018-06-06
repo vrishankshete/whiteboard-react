@@ -4,10 +4,10 @@ WORKDIR /usr/src/app
 
 COPY package*.json ./
 
-RUN npm install
+RUN npm install --production
 
-COPY . .
+COPY ./build ./server.js ./
 
-EXPOSE 8082
+EXPOSE 3001
 
 CMD [ "npm", "start" ]

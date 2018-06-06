@@ -7,7 +7,9 @@ import io from 'socket.io-client';
 let socket;
 class Stage extends React.Component{
     componentWillMount(){
-        socket = io(`${window.location.protocol}//${window.location.hostname}:8082`);        
+        //let port = (window.location.port===0||window.location.port==='')?80:window.location.port;
+        //socket = io(`${window.location.protocol}//${window.location.hostname}:${port}`);
+        socket = io();
         if(this.props.roomId === -1){
             this.props.history.push("/");
         }
