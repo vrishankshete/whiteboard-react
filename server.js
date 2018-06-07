@@ -26,7 +26,7 @@ log4js.configure({
 });
 
 var logger = log4js.getLogger('chat');
-logger.setLevel('auto');
+logger.setLevel('info');
 
 const HOST = 'localhost';
 const PORT = 3000;
