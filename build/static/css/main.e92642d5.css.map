@@ -1,1 +1,0 @@
-{"version":3,"sources":["App.css"],"names":[],"mappings":"AAAA,KACE,WAAY,CAGd,oBACE,iBAAmB,CAGrB,cACE,SAAW","file":"static/css/main.e92642d5.css","sourcesContent":["body {\r\n  height:100%;\r\n}\r\n\r\n.App, #root, .myStage {\r\n  text-align: center;\r\n}\r\n\r\n.errorMessage {\r\n  color: red;\r\n}\n\n\n// WEBPACK FOOTER //\n// ./src/App.css"],"sourceRoot":""}

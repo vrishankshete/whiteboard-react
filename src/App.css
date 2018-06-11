@@ -6,6 +6,10 @@ body {
   text-align: center;
 }
 
+.no-scroll {
+  touch-action: none;
+}
+
 .errorMessage {
   color: red;
 }

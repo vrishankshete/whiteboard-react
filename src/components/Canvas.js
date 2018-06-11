@@ -92,10 +92,12 @@ class Canvas extends React.Component{
         if(this.props.selectedTool === 'remove') return;
         this.penDown = true;
         let style = this.getCommonSVGStyle(e);
-        helper[this.props.selectedTool].penDown({x:e.nativeEvent.offsetX,y:e.nativeEvent.offsetY});
-        //ToDo : Enable touch events for mobile devices
-        //let rect = e.target.getBoundingClientRect();        
-        //helper[this.props.selectedTool].penDown({x:e.nativeEvent.touches[0].pageX-rect.left,y:e.nativeEvent.touches[0].pageY-rect.top});
+        if(e.nativeEvent.touches){
+            let rect = e.target.getBoundingClientRect();        
+            helper[this.props.selectedTool].penDown({x:e.nativeEvent.touches[0].pageX-rect.left,y:e.nativeEvent.touches[0].pageY-rect.top});            
+        }else{
+            helper[this.props.selectedTool].penDown({x:e.nativeEvent.offsetX,y:e.nativeEvent.offsetY});
+        }
         this.shape = {
             type:this.props.selectedTool,
             attributes:{
@@ -108,7 +110,13 @@ class Canvas extends React.Component{
     }
     svgMouseMove(e){
         if(this.penDown){
-            let attr = helper[this.props.selectedTool].getAttributes(e.nativeEvent.offsetX,e.nativeEvent.offsetY);
+            let attr;
+            if(e.nativeEvent.touches){
+                let rect = e.target.getBoundingClientRect();        
+                attr = helper[this.props.selectedTool].getAttributes(e.nativeEvent.touches[0].pageX-rect.left,e.nativeEvent.touches[0].pageY-rect.top);            
+            }else{
+                attr = helper[this.props.selectedTool].getAttributes(e.nativeEvent.offsetX,e.nativeEvent.offsetY);
+            }
             this.shape = {
                 type:this.shape.type,
                 attributes:{

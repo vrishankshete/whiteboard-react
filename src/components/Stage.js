@@ -28,12 +28,12 @@ class Stage extends React.Component{
     render(){
         return (
             <div>
-                <div className="col-sm-1"> 
-                    <Sidebar socket={socket}/>
-                </div>
-                <div className="col-sm-8"> 
+                <div className="col-sm-11 no-scroll"> 
                     RoomId: {this.props.roomId}  &nbsp;Name: {this.props.name}
                     <Canvas socket={socket}/>
+                </div>
+                <div className="col-sm-1"> 
+                    <Sidebar socket={socket}/>
                 </div>
             </div>
         );
