@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import Home from './components/Home';
+import Home from './components/Home/Home';
 import Stage from './components/Stage';
 import ErrorPage from './components/ErrorPage';
 import {Switch, Route} from 'react-router-dom';

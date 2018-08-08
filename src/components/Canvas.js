@@ -189,11 +189,11 @@ class Canvas extends React.Component{
     }
 }
 
-const mapStateToProos = (state) => {
+const mapStateToProos = (rootState) => {
     return {
-        selectedTool: state.selectedTool,
-        roomId: state.roomId,
-        name: state.name
+        selectedTool: rootState.sidebar.selectedTool,
+        roomId: rootState.home.roomId,
+        name: rootState.home.name
     }
 }
 const mapDispatchToProps = null;

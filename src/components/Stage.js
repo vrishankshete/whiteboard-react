@@ -1,8 +1,8 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import Sidebar from './Sidebar'
+import Sidebar from './Sidebar/Sidebar'
 import Canvas from './Canvas';
-import * as actionCreator from '../store/actions';
+//import * as actionCreator from './Home/actions';
 import io from 'socket.io-client';
 let socket;
 class Stage extends React.Component{
@@ -40,19 +40,20 @@ class Stage extends React.Component{
     }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (rootState) => {
     return{
-        roomId: state.roomId,
-        name: state.name,
-        selectedTool: state.selectedTool
+        roomId: rootState.home.roomId,
+        name: rootState.home.name,
+        selectedTool: rootState.sidebar.selectedTool
     }
 }
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        roomIdEntered:(roomId)=>dispatch(actionCreator.roomIdEntered(roomId)),
-        nameEntered:(name)=>dispatch(actionCreator.nameEntered(name))
-    }
-}
+// const mapDispatchToProps = (dispatch) => {
+//     return {
+//         roomIdEntered:(roomId)=>dispatch(actionCreator.roomIdEntered(roomId)),
+//         nameEntered:(name)=>dispatch(actionCreator.nameEntered(name))
+//     }
+// }
+const mapDispatchToProps = null;
 
 export default connect(mapStateToProps, mapDispatchToProps)(Stage);
